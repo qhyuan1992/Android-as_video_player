@@ -42,7 +42,9 @@ bool FFMPEGVideoDecoder::decodeVideoFrame(AVPacket packet, int* decodeVideoError
 			break;
 		}
 		if (gotframe) {
+			// 图像是否隔行
 			if (videoFrame->interlaced_frame) {
+				// 去交错
 				avpicture_deinterlace((AVPicture*) videoFrame, (AVPicture*) videoFrame, videoCodecCtx->pix_fmt, videoCodecCtx->width, videoCodecCtx->height);
 			}
 			this->uploadTexture();

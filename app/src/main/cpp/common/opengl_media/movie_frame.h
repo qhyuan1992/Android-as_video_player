@@ -12,8 +12,8 @@ typedef enum {
 
 class MovieFrame{
 public:
-	float position;
-	float duration;
+	float position;  // PTS
+	float duration;  // 该帧持续的时长
 	MovieFrame();
 	virtual MovieFrameType getType() = 0;
 };
@@ -34,9 +34,9 @@ public:
 
 class VideoFrame: public MovieFrame{
 public:
-	uint8_t * luma;
-	uint8_t * chromaB;
-	uint8_t * chromaR;
+	uint8_t * luma;     // Y分量
+	uint8_t * chromaB;  // U分量
+	uint8_t * chromaR;  // V分量
 	int width;
 	int height;
 	VideoFrame();

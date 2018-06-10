@@ -773,6 +773,7 @@ int AVSynchronizer::jniCallbackWithNoArguments(char* signature, char* params){
     return jniCallbackWithArguments(signature, params);
 }
 
+/*ANSI标准形式的声明方式，省略号表示可选参数*/
 int AVSynchronizer::jniCallbackWithArguments(const char* signature, const char* params, ...){
 	JNIEnv *env;
 	if (g_jvm->AttachCurrentThread(&env, NULL) != JNI_OK) {
@@ -787,7 +788,9 @@ int AVSynchronizer::jniCallbackWithArguments(const char* signature, const char* 
 	if (NULL != jcls) {
 		jmethodID jniCallback = env->GetMethodID(jcls, signature, params);
 		if (NULL != jniCallback) {
+			// 定义保存函数参数的结构
 			va_list arg_ptr;
+			// arg_ptr指向传入的第一个可选参数，params是最后一个确定的参数
 			va_start(arg_ptr,params);
 			env->CallVoidMethodV(obj, jniCallback, arg_ptr);
 			va_end(arg_ptr);

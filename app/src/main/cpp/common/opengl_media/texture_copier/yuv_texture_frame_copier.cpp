@@ -47,6 +47,7 @@ void YUVTextureFrameCopier::renderWithCoords(TextureFrame* textureFrame, GLuint 
 	if (!mIsInitialized) {
 		return;
 	}
+
 	glVertexAttribPointer(mGLVertexCoords, 2, GL_FLOAT, GL_FALSE, 0, vertexCoords);
 	glEnableVertexAttribArray (mGLVertexCoords);
 	glVertexAttribPointer(mGLTextureCoords, 2, GL_FLOAT, GL_FALSE, 0, textureCoords);
