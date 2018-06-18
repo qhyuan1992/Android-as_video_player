@@ -845,6 +845,7 @@ VideoFrame * VideoDecoder::handleVideoFrame() {
 
 void VideoDecoder::uploadTexture() {
 	int getLockCode = pthread_mutex_lock(&mLock);
+	// 当有新的一帧到来，解码线程唤醒渲染线程
 	textureFrameUploader->signalFrameAvailable();
 	//wait EGL Context copy frame
 	pthread_cond_wait(&mCondition, &mLock);

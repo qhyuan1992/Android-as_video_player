@@ -7,14 +7,14 @@
  *
  */
 void UploaderCallbackImpl::processVideoFrame(GLuint inputTexId, int width, int height, float position) {
-	if (mParent){
-		mParent->processVideoFrame(inputTexId, width, height, position);
+	if (avSynchronizer){
+		avSynchronizer->processVideoFrame(inputTexId, width, height, position);
 	}
 }
 
 int UploaderCallbackImpl::processAudioData(short *sample, int size, float position, byte** buffer) {
-	if (mParent){
-		return mParent->processAudioData(sample, size, position, buffer);
+	if (avSynchronizer){
+		return avSynchronizer->processAudioData(sample, size, position, buffer);
 	}
 	else{
 		return -1;
@@ -22,24 +22,24 @@ int UploaderCallbackImpl::processAudioData(short *sample, int size, float positi
 }
 
 void UploaderCallbackImpl::onSeekCallback(float seek_seconds) {
-	if (mParent){
-		mParent->onSeek(seek_seconds);
+	if (avSynchronizer){
+		avSynchronizer->onSeek(seek_seconds);
 	}
 }
 
 void UploaderCallbackImpl::initFromUploaderGLContext(EGLCore* eglCore) {
-	if (mParent){
-		int videoFrameWidth = mParent->getVideoFrameWidth();
-		int videoFrameHeight = mParent->getVideoFrameHeight();
+	if (avSynchronizer){
+		int videoFrameWidth = avSynchronizer->getVideoFrameWidth();
+		int videoFrameHeight = avSynchronizer->getVideoFrameHeight();
 
-		EGLContext eglContext = mParent->getUploaderEGLContext();
-		mParent->OnInitFromUploaderGLContext(eglCore, videoFrameWidth, videoFrameHeight);
+		EGLContext eglContext = avSynchronizer->getUploaderEGLContext();
+		avSynchronizer->OnInitFromUploaderGLContext(eglCore, videoFrameWidth, videoFrameHeight);
 	}
 }
 
 void UploaderCallbackImpl::destroyFromUploaderGLContext() {
-	if (mParent){
-		mParent->onDestroyFromUploaderGLContext();
+	if (avSynchronizer){
+		avSynchronizer->onDestroyFromUploaderGLContext();
 	}
 }
 
@@ -62,7 +62,7 @@ AVSynchronizer::AVSynchronizer() {
 	decoder = NULL;
 	passThorughRender = NULL;
 
-	mUploaderCallback.setParent(this);
+	mUploaderCallback.setAVSynchronizer(this);
 }
 
 void AVSynchronizer::destroyPassThorughRender(){

@@ -45,6 +45,7 @@ bool TextureFrameUploader::start(int videoWidth, int videoHeight, int degress) {
 
 	//在线程中进行初始化上下文工作
 	_msg = MSG_WINDOW_SET;
+	// 启动渲染线程
 	pthread_create(&_threadId, 0, threadStartCallback, this);
 	return true;
 }
@@ -71,6 +72,9 @@ void TextureFrameUploader::stop() {
 	LOGI("TextureFrameUploader Render thread stopped");
 }
 
+/**
+ * 启动渲染线程
+ */
 void* TextureFrameUploader::threadStartCallback(void *myself) {
 	TextureFrameUploader *processor = (TextureFrameUploader*) myself;
 	processor->renderLoop();
@@ -98,7 +102,7 @@ void TextureFrameUploader::renderLoop() {
 		}
 		_msg = MSG_NONE;
 		if (NULL != eglCore) {
-			this->signalDecodeThread();
+			this->signalDecodeThread();// 唤醒解码线程，自己继续等待
 			pthread_cond_wait(&mCondition, &mLock);
 			eglCore->makeCurrent(copyTexSurface);
 			this->drawFrame();
@@ -157,12 +161,21 @@ void TextureFrameUploader::destroy() {
 	eglCore = NULL;
 }
 
+/**
+ * 注册更新纹理回调
+ * @param update_tex_image_callback      更新纹理回调
+ * @param signal_decode_thread_callback  唤醒解码线程
+ * @param context                        &VideoDecoder
+ */
 void TextureFrameUploader::registerUpdateTexImageCallback(float (*update_tex_image_callback)(TextureFrame* textureFrame, void *context), void (*signal_decode_thread_callback)(void *context), void* context) {
 	this->updateTexImageCallback = update_tex_image_callback;
 	this->signalDecodeThreadCallback = signal_decode_thread_callback;
 	this->updateTexImageContext = context;
 }
 
+/**
+ * 唤醒解码线程
+ */
 void TextureFrameUploader::signalDecodeThread() {
 	signalDecodeThreadCallback(updateTexImageContext);
 }

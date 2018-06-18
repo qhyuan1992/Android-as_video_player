@@ -55,7 +55,7 @@ bool VideoPlayerController::startAVSynchronizer() {
         return ret;
     }
 
-    if (this->initAVSynchronizer()) {
+    if (this->initAVSynchronizer()) { /////////////////////////////////////
         if (synchronizer->validAudio()) {
             ret = this->initAudioOutput();
         }

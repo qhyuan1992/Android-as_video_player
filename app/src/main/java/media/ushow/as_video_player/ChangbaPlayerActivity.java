@@ -215,9 +215,9 @@ public class ChangbaPlayerActivity extends Activity implements OnSeekBarChangeLi
 					}
 
 				};
-				playerController.setUseMediaCodec(false);
+				playerController.setUseMediaCodec(true);
 				int width = getWindowManager().getDefaultDisplay().getWidth();
-				String path = "/mnt/sdcard/DCIM/test2.mp4";
+				String path = "rtmp://192.168.1.119:1935/yqh/room"; // /mnt/sdcard/DCIM/test2.mp4
 				playerController.init(path, holder.getSurface(), width, width, new OnInitializedCallback() {
 					public void onInitialized(OnInitialStatus onInitialStatus) {
 						// TODO: do your work here

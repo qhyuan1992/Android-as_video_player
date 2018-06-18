@@ -15,6 +15,13 @@
 
 #define OPENGL_VERTEX_COORDNATE_CNT			8
 
+/**
+ * c-------d
+ * | \     |
+ * |   \   |
+ * |     \ |
+ * a-------b
+ */
 static GLfloat DECODER_COPIER_GL_VERTEX_COORDS[8] = {
 		-1.0f, -1.0f,	// 0 top left
 		1.0f, -1.0f,	// 1 bottom left
@@ -22,6 +29,13 @@ static GLfloat DECODER_COPIER_GL_VERTEX_COORDS[8] = {
 		 1.0f, 1.0f,	// 3 top right
 	};
 
+/**
+ * c-------d
+ * | \     |
+ * |   \   |
+ * |     \ |
+ * a-------b
+ */
 static GLfloat DECODER_COPIER_GL_TEXTURE_COORDS_NO_ROTATION[8] = {
 		0.0f, 0.0f,
 		1.0f, 0.0f,
@@ -29,6 +43,13 @@ static GLfloat DECODER_COPIER_GL_TEXTURE_COORDS_NO_ROTATION[8] = {
 		1.0f, 1.0f
 	};
 
+/**
+ * a-------c
+ * |     / |
+ * |   /   |
+ * | /     |
+ * b-------d
+ */
 static GLfloat DECODER_COPIER_GL_TEXTURE_COORDS_ROTATED_90[8] = {
 		0.0f, 1.0f,
 		0.0f, 0.0f,
@@ -119,7 +140,7 @@ protected:
 	TextureFrame* textureFrame;
 	update_tex_image_callback updateTexImageCallback;
 	signal_decode_thread_callback signalDecodeThreadCallback;
-	void* updateTexImageContext;
+	void* updateTexImageContext; // VideoDecoder
 
 	enum RenderThreadMessage {
 		MSG_NONE = 0, MSG_WINDOW_SET, MSG_RENDER_LOOP_EXIT
