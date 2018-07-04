@@ -45,7 +45,7 @@ bool TextureFrameUploader::start(int videoWidth, int videoHeight, int degress) {
 
 	//在线程中进行初始化上下文工作
 	_msg = MSG_WINDOW_SET;
-	pthread_create(&_threadId, 0, threadStartCallback, this);
+	pthread_create(&_threadId, 0, threadStartCallback, this); // 上传线程
 	return true;
 }
 
