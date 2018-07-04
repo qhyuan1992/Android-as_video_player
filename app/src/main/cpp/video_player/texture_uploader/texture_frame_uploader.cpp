@@ -45,7 +45,7 @@ bool TextureFrameUploader::start(int videoWidth, int videoHeight, int degress) {
 
 	//在线程中进行初始化上下文工作
 	_msg = MSG_WINDOW_SET;
-	pthread_create(&_threadId, 0, threadStartCallback, this); // 上传纹理线程
+	pthread_create(&_threadId, 0, threadStartCallback, this);
 	return true;
 }
 
@@ -71,7 +71,6 @@ void TextureFrameUploader::stop() {
 	LOGI("TextureFrameUploader Render thread stopped");
 }
 
-// 上传纹理线程
 void* TextureFrameUploader::threadStartCallback(void *myself) {
 	TextureFrameUploader *processor = (TextureFrameUploader*) myself;
 	processor->renderLoop();

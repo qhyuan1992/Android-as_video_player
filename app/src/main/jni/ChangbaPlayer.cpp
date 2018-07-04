@@ -11,6 +11,11 @@ VideoPlayerController* videoPlayerController = NULL;
 
 static ANativeWindow *window = 0;
 
+/**
+ * @param obj  Java类ChngbaPlayer
+ * @param size  max_analyze_duration的长度
+ * @param fpsProbeSizeConfigured   true
+ */
 JNIEXPORT jboolean JNICALL Java_com_changba_songstudio_video_player_ChangbaPlayer_prepare(
 		JNIEnv * env, jobject obj, jstring videoMergeFilePathParam, jintArray max_analyze_duration, jint size, jint probesize, jboolean fpsProbeSizeConfigured, jfloat minBufferedDuration, jfloat maxBufferedDuration,
 		jint width, jint height, jobject surface) {

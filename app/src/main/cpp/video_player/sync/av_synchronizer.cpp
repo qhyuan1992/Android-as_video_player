@@ -7,14 +7,14 @@
  *
  */
 void UploaderCallbackImpl::processVideoFrame(GLuint inputTexId, int width, int height, float position) {
-	if (mParent){
-		mParent->processVideoFrame(inputTexId, width, height, position);
+	if (avSynchronizer){
+		avSynchronizer->processVideoFrame(inputTexId, width, height, position);
 	}
 }
 
 int UploaderCallbackImpl::processAudioData(short *sample, int size, float position, byte** buffer) {
-	if (mParent){
-		return mParent->processAudioData(sample, size, position, buffer);
+	if (avSynchronizer){
+		return avSynchronizer->processAudioData(sample, size, position, buffer);
 	}
 	else{
 		return -1;
@@ -22,24 +22,24 @@ int UploaderCallbackImpl::processAudioData(short *sample, int size, float positi
 }
 
 void UploaderCallbackImpl::onSeekCallback(float seek_seconds) {
-	if (mParent){
-		mParent->onSeek(seek_seconds);
+	if (avSynchronizer){
+		avSynchronizer->onSeek(seek_seconds);
 	}
 }
 
 void UploaderCallbackImpl::initFromUploaderGLContext(EGLCore* eglCore) {
-	if (mParent){
-		int videoFrameWidth = mParent->getVideoFrameWidth();
-		int videoFrameHeight = mParent->getVideoFrameHeight();
+	if (avSynchronizer){
+		int videoFrameWidth = avSynchronizer->getVideoFrameWidth();
+		int videoFrameHeight = avSynchronizer->getVideoFrameHeight();
 
-		EGLContext eglContext = mParent->getUploaderEGLContext();
-		mParent->OnInitFromUploaderGLContext(eglCore, videoFrameWidth, videoFrameHeight);
+		EGLContext eglContext = avSynchronizer->getUploaderEGLContext();
+		avSynchronizer->OnInitFromUploaderGLContext(eglCore, videoFrameWidth, videoFrameHeight);
 	}
 }
 
 void UploaderCallbackImpl::destroyFromUploaderGLContext() {
-	if (mParent){
-		mParent->onDestroyFromUploaderGLContext();
+	if (avSynchronizer){
+		avSynchronizer->onDestroyFromUploaderGLContext();
 	}
 }
 
@@ -62,7 +62,7 @@ AVSynchronizer::AVSynchronizer() {
 	decoder = NULL;
 	passThorughRender = NULL;
 
-	mUploaderCallback.setParent(this);
+	mUploaderCallback.setAVSynchronizer(this);
 }
 
 void AVSynchronizer::destroyPassThorughRender(){
@@ -774,6 +774,7 @@ int AVSynchronizer::jniCallbackWithNoArguments(char* signature, char* params){
     return jniCallbackWithArguments(signature, params);
 }
 
+/*ANSI标准形式的声明方式，省略号表示可选参数*/
 int AVSynchronizer::jniCallbackWithArguments(const char* signature, const char* params, ...){
 	JNIEnv *env;
 	if (g_jvm->AttachCurrentThread(&env, NULL) != JNI_OK) {
@@ -788,7 +789,9 @@ int AVSynchronizer::jniCallbackWithArguments(const char* signature, const char* 
 	if (NULL != jcls) {
 		jmethodID jniCallback = env->GetMethodID(jcls, signature, params);
 		if (NULL != jniCallback) {
+			// 定义保存函数参数的结构
 			va_list arg_ptr;
+			// arg_ptr指向传入的第一个可选参数，params是最后一个确定的参数
 			va_start(arg_ptr,params);
 			env->CallVoidMethodV(obj, jniCallback, arg_ptr);
 			va_end(arg_ptr);

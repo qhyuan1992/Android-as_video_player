@@ -71,6 +71,9 @@ SLresult AudioOutput::start() {
 	return SL_RESULT_SUCCESS;
 }
 
+/**
+ * @param ctx  VideoPlayerController
+ */
 SLresult AudioOutput::initSoundTrack(int channels, int accompanySampleRate, audioPlayerCallback produceDataCallback, void* ctx) {
 	LOGI("enter AudioOutput::initSoundTrack");
 

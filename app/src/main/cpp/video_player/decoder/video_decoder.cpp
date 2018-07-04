@@ -776,7 +776,7 @@ std::list<MovieFrame*>* VideoDecoder::decodeFrames(float minDuration, int* decod
 		if (packet.stream_index == videoStreamIndex) {
 			this->decodeVideoFrame(packet, decodeVideoErrorState);
 		} else if (packet.stream_index == audioStreamIndex) {
-			finished = decodeAudioFrames(&packet, result, decodedDuration, minDuration, decodeVideoErrorState);
+			finished = this->decodeAudioFrames(&packet, result, decodedDuration, minDuration, decodeVideoErrorState);
 		}
 		av_free_packet(&packet);
 	}
@@ -804,6 +804,7 @@ VideoFrame * VideoDecoder::handleVideoFrame() {
 		return NULL;
 	}
 	VideoFrame *yuvFrame = new VideoFrame();
+	// linesize[AV_NUM_DATA_POINTERS] data中“一行”数据的大小,未必等于图像的宽，一般大于图像的宽
 	int width = MIN(videoFrame->linesize[0], videoCodecCtx->width);
 	int height = videoCodecCtx->height;
 	int lumaLength = width * height;
@@ -833,7 +834,7 @@ VideoFrame * VideoDecoder::handleVideoFrame() {
 	const int64_t frameDuration = av_frame_get_pkt_duration(videoFrame);
 	if (frameDuration) {
 		yuvFrame->duration = frameDuration * videoTimeBase;
-		yuvFrame->duration += videoFrame->repeat_pict * videoTimeBase * 0.5;
+		yuvFrame->duration += videoFrame->repeat_pict * videoTimeBase * 0.5; // repeat_pict:这张图片需要要延迟多少久
 	} else {
 		yuvFrame->duration = 1.0 / fps;
 	}
@@ -844,6 +845,7 @@ VideoFrame * VideoDecoder::handleVideoFrame() {
 
 void VideoDecoder::uploadTexture() {
 	int getLockCode = pthread_mutex_lock(&mLock);
+	// 当有新的一帧到来，解码线程唤醒渲染线程
 	textureFrameUploader->signalFrameAvailable();
 	//wait EGL Context copy frame
 	pthread_cond_wait(&mCondition, &mLock);

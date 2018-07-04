@@ -14,6 +14,18 @@ public class ChangbaPlayer extends MediaCodecDecoderLifeCycle {
 				onInitializedCallback);
 	}
 
+	/**
+	 *
+	 * @param srcFilenameParam        文件路径/网络路径
+	 * @param max_analyze_duration    流格式探测 {-1,-1,-1}
+	 * @param probesize
+	 * @param maxBufferedDuration
+	 * @param minBufferedDuration
+	 * @param surface                 SurfaceView/TextureView得到的Surface
+	 * @param width                   宽
+	 * @param height                  高
+	 * @param onInitializedCallback   初始化结束的回调
+	 */
 	public void init(final String srcFilenameParam, final int[] max_analyze_duration, final int probesize,
 			final float minBufferedDuration, final float maxBufferedDuration, final Surface surface, final int width,
 			final int height, final OnInitializedCallback onInitializedCallback) {

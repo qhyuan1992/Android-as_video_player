@@ -26,8 +26,8 @@ class AVSynchronizer;
 
 class UploaderCallbackImpl : public UploaderCallback {
 public:
-	void setParent(AVSynchronizer * pParent) {
-		mParent = pParent;
+	void setAVSynchronizer(AVSynchronizer * avSynchronizer) {
+		this->avSynchronizer = avSynchronizer;
 	}
 
 public:
@@ -44,7 +44,7 @@ public:
 	void createEncoderOutputRender() { };
 
 protected:
-	AVSynchronizer * mParent;
+	AVSynchronizer * avSynchronizer;
 };
 
 

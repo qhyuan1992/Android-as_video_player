@@ -80,6 +80,7 @@ void CircleFrameTextureQueue::buildGPUFrame(FrameTexture* frameTexture, int widt
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	GLint internalFormat = GL_RGBA;
+	// pixels参数为null一般是为了渲染到纹理，通过绑定到新的FrameBuffer附着一个纹理
 	glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, (GLsizei) width, (GLsizei) height, 0, internalFormat, GL_UNSIGNED_BYTE, 0);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
