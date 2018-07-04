@@ -397,6 +397,7 @@ bool AVSynchronizer::addFrames(float thresholdDuration, std::list<MovieFrame*>* 
 	return  !isBufferedDurationIncreasedToThreshold;
 }
 
+// 解码线程
 void* AVSynchronizer::startDecoderThread(void* ptr) {
 	AVSynchronizer* synchronizer = (AVSynchronizer *) ptr;
 
@@ -496,7 +497,7 @@ void AVSynchronizer::initDecoderThread() {
 	pthread_mutex_init(&videoDecoderLock, NULL);
 	pthread_cond_init(&videoDecoderCondition, NULL);
 	isInitializeDecodeThread = true;
-	pthread_create(&videoDecoderThread, NULL, startDecoderThread, this);
+	pthread_create(&videoDecoderThread, NULL, startDecoderThread, this); // 解码线程
 }
 
 void AVSynchronizer::signalDecodeThread() {

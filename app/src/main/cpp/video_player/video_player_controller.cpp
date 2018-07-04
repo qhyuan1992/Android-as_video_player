@@ -178,8 +178,7 @@ bool VideoPlayerController::init(char *srcFilenameParam, JavaVM *g_jvm, jobject 
     this->obj = obj;
     this->minBufferedDuration = minBufferedDuration;
     this->maxBufferedDuration = maxBufferedDuration;
-
-    pthread_create(&initThreadThreadId, 0, initThreadCallback, this);
+    pthread_create(&initThreadThreadId, 0, initThreadCallback, this); // 初始化线程
 
     userCancelled = false;
     return true;

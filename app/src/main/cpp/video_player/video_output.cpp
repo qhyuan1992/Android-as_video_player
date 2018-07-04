@@ -35,9 +35,11 @@ bool VideoOutput::initOutput(ANativeWindow* window, int screenWidth, int screenH
 	handler = new VideoOuputHandler(this, queue);
 
 	handler->postMessage(new Message(VIDEO_OUTPUT_MESSAGE_CREATE_EGL_CONTEXT, window));
-	pthread_create(&_threadId, 0, threadStartCallback, this);
+	pthread_create(&_threadId, 0, threadStartCallback, this); // 渲染线程
 	return true;
 }
+
+
 bool VideoOutput::createEGLContext(ANativeWindow* window) {
 	LOGI("enter VideoOutput::createEGLContext");
 	eglCore = new EGLCore();
@@ -52,6 +54,7 @@ bool VideoOutput::createEGLContext(ANativeWindow* window) {
 	return ret;
 }
 
+// 渲染线程
 void* VideoOutput::threadStartCallback(void *myself) {
 	VideoOutput *output = (VideoOutput*) myself;
 	output->processMessage();
