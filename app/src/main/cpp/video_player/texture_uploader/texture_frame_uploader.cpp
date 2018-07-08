@@ -179,6 +179,7 @@ void TextureFrameUploader::drawFrame() {
 	/** 将YUV数据(软件解码), samplerExternalOES格式的TexId(硬件解码) 拷贝到GL_RGBA格式的纹理ID上 **/
 	textureFrameCopier->renderWithCoords(textureFrame, outputTexId, vertexCoords, textureCoords);
 	if (mUploaderCallback)
+        // outputTexId 上已经有了内容了，这里再将outputTexId纹理上的东西再copy到队列中
 		mUploaderCallback->processVideoFrame(outputTexId, videoWidth, videoHeight, position);
 	else
 		LOGE("TextureFrameUploader::mUploaderCallback is NULL");

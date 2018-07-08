@@ -50,11 +50,13 @@ EGLSurface EGLCore::createWindowSurface(ANativeWindow* _window) {
 		return NULL;
 	}
 
+	// 查询EGLConfig相关的信息，EGLConfig包含了渲染表面的所有信息，包括可用颜色、缓冲区等其他特性。
 	if (!eglGetConfigAttrib(display, config, EGL_NATIVE_VISUAL_ID, &format)) {
 		LOGE("eglGetConfigAttrib() returned error %d", eglGetError());
 		release();
 		return surface;
 	}
+	// format可能是WINDOW_FORMAT_RGBA_8888等
 	ANativeWindow_setBuffersGeometry(_window, 0, 0, format);
 	if (!(surface = eglCreateWindowSurface(display, config, _window, 0))) {
 		LOGE("eglCreateWindowSurface() returned error %d", eglGetError());
@@ -132,6 +134,7 @@ bool EGLCore::init(EGLContext sharedContext) {
 	}
 
 	EGLint eglContextAttributes[] = { EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE };
+	// EGLContext不为NULL时，多线程共享EGL上下文
 	if (!(context = eglCreateContext(display, config, NULL == sharedContext ? EGL_NO_CONTEXT : sharedContext, eglContextAttributes))) {
 		LOGE("eglCreateContext() returned error %d", eglGetError());
 		release();

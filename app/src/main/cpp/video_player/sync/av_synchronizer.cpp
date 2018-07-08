@@ -627,13 +627,14 @@ void AVSynchronizer::renderToVideoQueue(GLuint inputTexId, int width, int height
 		return;
 	}
 
-	//注意:先做上边一步的原因是 担心videoEffectProcessor处理速度比较慢 这样子就把circleQueue锁住太长时间了
+	//注意:先做上边一步的原因是 担心 videoEffectProcessor 处理速度比较慢 这样子就把circleQueue锁住太长时间了
 	bool isFirstFrame = circleFrameTextureQueue->getIsFirstFrame();
 	FrameTexture* frameTexture = circleFrameTextureQueue->lockPushCursorFrameTexture();
 	if (NULL != frameTexture) {
 		frameTexture->position = position;
 //		LOGI("Render To TextureQueue texture Position is %.3f ", position);
 		//cpy input texId to target texId
+		// 通过渲染到纹理FBO将inputTexId拷贝到frameTexture->texId
 		passThorughRender->renderToTexture(inputTexId, frameTexture->texId);
 		circleFrameTextureQueue->unLockPushCursorFrameTexture();
 
@@ -641,6 +642,7 @@ void AVSynchronizer::renderToVideoQueue(GLuint inputTexId, int width, int height
 		frameAvailable();
 
 		// backup the first frame
+		// 备份第一帧
 		if (isFirstFrame) {
 			FrameTexture* firstFrameTexture = circleFrameTextureQueue->getFirstFrameFrameTexture();
 			if (firstFrameTexture) {
